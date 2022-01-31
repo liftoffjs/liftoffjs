@@ -6,7 +6,7 @@ export interface RegisterViewProps {
 
 const RegisterView: React.FC<RegisterViewProps> = (props) => (
   <MasterLayout contain={true}>
-    <lo-register-form set-cookie="true">
+    <lo-register-form set-cookie="true" redirect-to="/">
       <div className="rounded-xl bg-gradient-to-r bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 p-2 sm:p-6 dark:bg-gray-800">
         <div className="mb-6">
           <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Email</label>
