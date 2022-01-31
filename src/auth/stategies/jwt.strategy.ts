@@ -1,4 +1,4 @@
-import { ExtractJwt, Strategy } from 'passport-jwt';
+import * as JwtCookieComboStrategy from 'passport-jwt-cookiecombo';
 import { PassportStrategy } from '@nestjs/passport';
 import { Injectable } from '@nestjs/common';
 import { JwtPayload } from '../interfaces';
@@ -6,12 +6,10 @@ import { LiftoffConfigKey, LiftoffConfigService } from '../../common';
 import { ViewUserDto } from '../../user';
 
 @Injectable()
-export class JwtStrategy extends PassportStrategy(Strategy) {
+export class JwtStrategy extends PassportStrategy(JwtCookieComboStrategy, "jwt") {
   constructor(config: LiftoffConfigService) {
     super({
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      ignoreExpiration: false,
-      secretOrKey: config.getString(LiftoffConfigKey.JWT_SECRET),
+      secretOrPublicKey: config.getString(LiftoffConfigKey.JWT_SECRET),
     });
   }
 

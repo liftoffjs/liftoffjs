@@ -34,7 +34,9 @@ class RegisterFormComponent extends HTMLElement {
       })
         .then((response) => response.json())
         .then((json) => {
-          console.log({ json });
+          if (json.access_token) {
+            location.href = this.getAttribute('redirect-to');
+          }
         });
     };
     return this.appendChild(form);

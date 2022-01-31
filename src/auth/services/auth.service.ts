@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { EncryptionService } from '../../common';
-import { User, UserService, ViewUserDto } from '../../user';
+import { User, UserRole, UserService, ViewUserDto } from '../../user';
 import { LoginUserDto, RegisterUserDto } from '../dtos';
 import { Jwt, JwtPayload } from '../interfaces';
 
@@ -54,7 +54,7 @@ export class AuthService {
       user_id: user.id,
       user_username: user.username,
       user_email: user.email,
-      user_role: user.role,
+      user_role: user.role ?? UserRole.User,
     };
 
     return {

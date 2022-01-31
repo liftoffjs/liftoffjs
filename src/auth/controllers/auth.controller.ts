@@ -11,6 +11,7 @@ import {
 import { AuthGuard } from '@nestjs/passport';
 import { Request, Response } from 'express';
 import { LiftoffConfigService } from 'src/common';
+import { User } from 'src/user';
 import { RegisterUserDto } from '../dtos';
 import { AuthService } from '../services';
 
@@ -33,17 +34,7 @@ export class AuthController {
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
   ) {
-    const jwt = this.authService.generateJwt((req as any).user);
-
-    if (req.header('set-cookie')?.[0] === "true") {
-      res.cookie('jwt', JSON.stringify(jwt), {
-        secure: this.config.getString('ENV_NAME', 'dev') !== 'dev',
-        httpOnly: true,
-        expires: new Date('2023-01-01'), // TODO: use JWT_EXPIRE
-      });
-    }
-
-    return jwt;
+    return this.handleJwt(req, res, (req as any).user);
   }
 
   @Get('register')
@@ -59,12 +50,18 @@ export class AuthController {
     @Body() dto: RegisterUserDto,
   ) {
     const user = await this.authService.register(dto);
+    return this.handleJwt(req, res, user);
+  }
+
+  private handleJwt(req: Request, res: Response, user: User) {
     const jwt = this.authService.generateJwt(user);
 
     if (req.header('set-cookie')?.[0] === "true") {
-      res.cookie('jwt', JSON.stringify(jwt), {
+      res.cookie('jwt', jwt.access_token, {
         secure: this.config.getString('ENV_NAME', 'dev') !== 'dev',
         httpOnly: true,
+        sameSite: true,
+        signed: true,
         expires: new Date('2023-01-01'), // TODO: use JWT_EXPIRE
       });
     }
