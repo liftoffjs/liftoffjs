@@ -6,12 +6,9 @@ import { UserService } from './services';
 import { UserController } from './controllers';
 
 @Module({
-  imports: [
-    CommonModule,
-    MikroOrmModule.forFeature([User]),
-  ],
+  imports: [CommonModule, MikroOrmModule.forFeature([User])],
   providers: [UserService],
   exports: [UserService],
   controllers: [UserController],
 })
-export class UserModule { }
+export class UserModule {}

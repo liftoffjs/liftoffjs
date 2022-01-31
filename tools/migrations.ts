@@ -3,7 +3,6 @@ import { IMigrator } from '@mikro-orm/core/typings';
 import { Module } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { DatabaseModule } from '../src/database/database.module';
-import * as rimraf from 'rimraf';
 import * as readline from 'readline';
 
 @Module({
@@ -17,7 +16,7 @@ async function run(migrator: IMigrator) {
 }
 
 async function generate(migrator: IMigrator) {
-  const x = await migrator.createMigration('./migrations');
+  await migrator.createMigration('./migrations');
   console.log('Migration generated.');
 }
 

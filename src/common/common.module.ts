@@ -7,4 +7,4 @@ import { EncryptionService, LiftoffConfigService } from './services';
   providers: [EncryptionService, LiftoffConfigService],
   exports: [EncryptionService, LiftoffConfigService],
 })
-export class CommonModule { }
+export class CommonModule {}

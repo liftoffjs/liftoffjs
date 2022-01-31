@@ -8,12 +8,12 @@ export class UserService {
   constructor(
     @InjectRepository(User)
     readonly repository: EntityRepository<User>,
-  ) {
-  }
+  ) { }
 
-  register(user: User) {
+  async register(user: User) {
     user.username = user.username?.toLocaleLowerCase()?.replace(/ /g, '');
-    return this.repository.persistAndFlush(user);
+    await this.repository.persistAndFlush(user);
+    return user;
   }
 
   findByUsername(username: string) {

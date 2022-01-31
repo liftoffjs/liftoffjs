@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { EncryptionService } from '../../common';
-import { User, UserService } from '../../user';
+import { User, UserService, ViewUserDto } from '../../user';
 import { LoginUserDto, RegisterUserDto } from '../dtos';
 import { Jwt, JwtPayload } from '../interfaces';
 
@@ -11,8 +11,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
     private readonly encryptionService: EncryptionService,
     private readonly userService: UserService,
-  ) {
-  }
+  ) { }
 
   async register(user: RegisterUserDto) {
     const salt = await this.encryptionService.generateSalt();
@@ -22,7 +21,7 @@ export class AuthService {
     );
     const encryptedUser = new User({
       ...user,
-      password: hashedPassword
+      password: hashedPassword,
     });
     return this.userService.register(encryptedUser);
   }
@@ -34,6 +33,10 @@ export class AuthService {
   async login(user: LoginUserDto) {
     const storedUser = await this.userService.findByUsername(user.username);
 
+    if (!storedUser) {
+      return null;
+    }
+
     const isCorrectPassword = await this.encryptionService.compare(
       user.password,
       storedUser.password,
@@ -43,7 +46,7 @@ export class AuthService {
       return null;
     }
 
-    return user;
+    return storedUser;
   }
 
   generateJwt(user: User): Jwt {
