@@ -1,11 +1,18 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
 import { registerViewsModule } from './utils';
-import { EncryptionService, LiftoffConfigService } from './services';
+import { EncryptionService, LiftoffConfig } from './services';
 
 @Module({
-  imports: [ConfigModule.forRoot(), registerViewsModule(__dirname, [])],
-  providers: [EncryptionService, LiftoffConfigService],
-  exports: [EncryptionService, LiftoffConfigService],
+  imports: [registerViewsModule(__dirname, [])],
+  providers: [
+    EncryptionService,
+    {
+      provide: LiftoffConfig,
+      useFactory: () => {
+        return LiftoffConfig.load(require('../../.env.json'));
+      },
+    },
+  ],
+  exports: [EncryptionService, LiftoffConfig],
 })
-export class CommonModule { }
+export class CommonModule {}

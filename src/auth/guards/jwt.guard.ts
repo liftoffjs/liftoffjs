@@ -5,16 +5,14 @@ import {
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
-import { addReactContext } from 'express-tsx-views'
+import { addReactContext } from 'express-tsx-views';
 import { AppContext } from '../../common/views';
 import { UserRole } from '../../user/entities';
 import { ROLES_METADATA_KEY } from '../constants';
 
 @Injectable()
 export class JwtAuthGuard extends AuthGuard('jwt') {
-  constructor(
-    private readonly reflector: Reflector,
-  ) {
+  constructor(private readonly reflector: Reflector) {
     super();
   }
 

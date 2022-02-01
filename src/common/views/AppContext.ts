@@ -1,5 +1,5 @@
-import { createContext } from 'react'
-import { User } from '../../user'
+import { createContext } from 'react';
+import { User } from '../../user';
 
 export interface AppContextProps {
   user?: User;

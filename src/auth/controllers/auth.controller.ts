@@ -10,8 +10,8 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { Request, Response } from 'express';
-import { LiftoffConfigService } from 'src/common';
-import { User } from 'src/user';
+import { LiftoffConfig } from '../../common';
+import { User } from '../../user';
 import { RegisterUserDto } from '../dtos';
 import { AuthService } from '../services';
 
@@ -19,8 +19,8 @@ import { AuthService } from '../services';
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
-    private readonly config: LiftoffConfigService,
-  ) { }
+    private readonly config: LiftoffConfig,
+  ) {}
 
   @Get('login')
   @Render('login')
@@ -30,10 +30,7 @@ export class AuthController {
 
   @UseGuards(AuthGuard('local'))
   @Post('login')
-  async login(
-    @Req() req: Request,
-    @Res({ passthrough: true }) res: Response,
-  ) {
+  async login(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
     return this.handleJwt(req, res, (req as any).user);
   }
 
@@ -56,9 +53,9 @@ export class AuthController {
   private handleJwt(req: Request, res: Response, user: User) {
     const jwt = this.authService.generateJwt(user);
 
-    if (req.header('set-cookie')?.[0] === "true") {
+    if (req.header('set-cookie')?.[0] === 'true') {
       res.cookie('jwt', jwt.access_token, {
-        secure: this.config.getString('ENV_NAME', 'dev') !== 'dev',
+        secure: this.config.env !== 'dev',
         httpOnly: true,
         sameSite: true,
         signed: true,

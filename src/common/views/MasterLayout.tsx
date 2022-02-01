@@ -67,8 +67,8 @@ export const MasterLayout: React.FC<{ contain?: boolean }> = (props) => {
           </div>
       }
 
-      <script src="/assets/js/LoginForm.js"></script>
-      <script src="/assets/js/RegisterForm.js"></script>
+      <script src="/resources/js/LoginForm.js"></script>
+      <script src="/resources/js/RegisterForm.js"></script>
     </body>
   </>;
 }

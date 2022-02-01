@@ -2,12 +2,7 @@ import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { UserModule } from '../user';
-import {
-  CommonModule,
-  LiftoffConfigKey,
-  LiftoffConfigService,
-  registerViewsModule,
-} from '../common';
+import { CommonModule, LiftoffConfig, registerViewsModule } from '../common';
 import { AuthController } from './controllers';
 import { AuthService } from './services';
 import { JwtStrategy, LocalStrategy } from './stategies';
@@ -18,13 +13,13 @@ import { JwtStrategy, LocalStrategy } from './stategies';
     registerViewsModule(__dirname, [AuthController]),
     PassportModule,
     JwtModule.registerAsync({
-      inject: [LiftoffConfigService],
+      inject: [LiftoffConfig],
       imports: [CommonModule],
-      useFactory: (config: LiftoffConfigService) => {
+      useFactory: (config: LiftoffConfig) => {
         return {
-          secret: config.getString(LiftoffConfigKey.JWT_SECRET),
+          secret: config.auth.jwtSecret,
           signOptions: {
-            expiresIn: config.getString(LiftoffConfigKey.JWT_EXPIRE),
+            expiresIn: config.auth.jwtExpire,
           },
         };
       },

@@ -1,33 +1,34 @@
+import { Connection, IDatabaseDriver } from '@mikro-orm/core';
+import { MikroOrmModuleOptions } from '@mikro-orm/nestjs';
 import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
+import { createTransport } from 'nodemailer';
 
-export const enum LiftoffConfigKey {
-  ENV_NAME = 'ENV_NAME',
-  USER_PASSWORD_HASH = 'USER_PASSWORD_HASH',
-  JWT_EXPIRE = 'JWT_EXPIRE',
-  JWT_SECRET = 'JWT_SECRET',
-  DATABASE_TYPE = 'DATABASE_TYPE',
-  DATABASE_DB_NAME = 'DATABASE_DB_NAME',
-  DATABASE_ENTITIES = 'DATABASE_ENTITIES',
-  DATABASE_ENTITIES_TS = 'DATABASE_ENTITIES_TS',
+export interface Auth {
+  passwordHash: string;
+  jwtSecret: string;
+  jwtExpire: string;
+}
+
+export interface Database
+  extends MikroOrmModuleOptions<IDatabaseDriver<Connection>> {}
+
+export interface Email {
+  transport: Parameters<typeof createTransport>[0];
+  defaults: Parameters<typeof createTransport>[1];
 }
 
 @Injectable()
-export class LiftoffConfigService {
-  constructor(private readonly configService: ConfigService) {}
+export class LiftoffConfig {
+  constructor() {}
 
-  getString(key: LiftoffConfigKey | string, defaultValue?: string): string {
-    return this.configService.get(key) ?? defaultValue;
-  }
+  env: string;
+  auth: Auth;
+  database: Database;
+  email: Email;
 
-  getStringCsv(
-    key: LiftoffConfigKey | string,
-    defaultValue?: string[],
-  ): string[] {
-    const values = this.getString(key);
-    if (!values) {
-      return defaultValue;
-    }
-    return values.split(',');
+  static load(config: Partial<LiftoffConfig>) {
+    const obj = new LiftoffConfig();
+    Object.assign(obj, config);
+    return obj;
   }
 }

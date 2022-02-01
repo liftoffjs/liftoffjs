@@ -8,7 +8,7 @@ export class UserService {
   constructor(
     @InjectRepository(User)
     readonly repository: EntityRepository<User>,
-  ) { }
+  ) {}
 
   async register(user: User) {
     user.username = user.username?.toLocaleLowerCase()?.replace(/ /g, '');

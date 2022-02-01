@@ -14,8 +14,8 @@ import { UserModule } from '../user/user.module';
   imports: [
     registerViewsModule(__dirname, [AppController]),
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '../..', 'assets'),
-      serveRoot: '/assets',
+      rootPath: join(__dirname, '../..', 'resources'),
+      serveRoot: '/resources',
     }),
     AuthModule,
     DatabaseModule,
@@ -30,4 +30,4 @@ import { UserModule } from '../user/user.module';
     },
   ],
 })
-export class AppModule { }
+export class AppModule {}

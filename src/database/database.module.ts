@@ -1,34 +1,18 @@
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { Module } from '@nestjs/common';
-import {
-  CommonModule,
-  LiftoffConfigKey,
-  LiftoffConfigService,
-} from '../common';
+import { CommonModule, LiftoffConfig } from '../common';
 
 @Module({
   imports: [
     CommonModule,
     MikroOrmModule.forRootAsync({
-      inject: [LiftoffConfigService],
+      inject: [LiftoffConfig],
       imports: [CommonModule],
-      useFactory: (config: LiftoffConfigService) => {
-        const entities = config.getStringCsv(
-          LiftoffConfigKey.DATABASE_ENTITIES,
-          ['./dist/**/*.entity.js'],
-        );
-        const entitiesTs = config.getStringCsv(
-          LiftoffConfigKey.DATABASE_ENTITIES,
-          ['./src/**/*.entity.ts'],
-        );
-        const dbName = config.getString(LiftoffConfigKey.DATABASE_DB_NAME);
-        const type = config.getString(LiftoffConfigKey.DATABASE_TYPE) as any;
-
+      useFactory: (config: LiftoffConfig) => {
         return {
-          entities,
-          entitiesTs,
-          dbName,
-          type,
+          entities: ['./dist/**/*.entity.js'],
+          entitiesTs: ['./src/**/*.entity.ts'],
+          ...config.database,
         };
       },
     }),

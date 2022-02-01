@@ -11,7 +11,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
     private readonly encryptionService: EncryptionService,
     private readonly userService: UserService,
-  ) { }
+  ) {}
 
   async register(user: RegisterUserDto) {
     const salt = await this.encryptionService.generateSalt();
