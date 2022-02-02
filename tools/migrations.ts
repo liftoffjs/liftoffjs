@@ -4,6 +4,7 @@ import { Module } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { DatabaseModule } from '../src/database/database.module';
 import * as readline from 'readline';
+import * as rimraf from 'rimraf';
 
 @Module({
   imports: [DatabaseModule]
@@ -20,19 +21,21 @@ async function generate(migrator: IMigrator) {
   console.log('Migration generated.');
 }
 
-async function refresh(migrator: IMigrator) {
+async function rebuild(migrator: IMigrator) {
   const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout,
   });
 
-  return new Promise(resolve => rl.question("Are you sure you want to revert and run all migrations? (yes/no) ", async ans => {
+  return new Promise(resolve => rl.question("Are you sure you want to rebuild migrations? (yes/no) ", async ans => {
     if (ans === "yes") {
-      await migrator.down();
+      await new Promise(resolve => rimraf('../migrations', resolve));
+      await new Promise(resolve => rimraf('../data', resolve));
+      await migrator.createMigration('./migrations');
       await migrator.up();
     }
     rl.close();
-    console.log('Migrations refreshed.');
+    console.log('Migrations rebuilded.');
     resolve(null);
   }));
 }
@@ -44,7 +47,7 @@ async function bootstrap() {
   const commands = {
     run,
     generate,
-    refresh
+    rebuild
   };
 
   const command: keyof typeof commands = process.argv[2] as any;

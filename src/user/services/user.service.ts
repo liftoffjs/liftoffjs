@@ -8,10 +8,16 @@ export class UserService {
   constructor(
     @InjectRepository(User)
     readonly repository: EntityRepository<User>,
-  ) {}
+  ) { }
 
   async register(user: User) {
     user.username = user.username?.toLocaleLowerCase()?.replace(/ /g, '');
+    await this.repository.persistAndFlush(user);
+    return user;
+  }
+
+  async update(user: User, userPartial: Partial<User>) {
+    Object.keys(userPartial).forEach(key => user[key] = userPartial[key]);
     await this.repository.persistAndFlush(user);
     return user;
   }

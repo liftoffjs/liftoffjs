@@ -20,6 +20,9 @@ export class User {
   @Property()
   password: string;
 
+  @Property()
+  resetPasswordToken: string;
+
   @Property({ default: UserRole.User })
   role: UserRole;
 

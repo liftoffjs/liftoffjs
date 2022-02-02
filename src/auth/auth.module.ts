@@ -6,10 +6,12 @@ import { CommonModule, LiftoffConfig, registerViewsModule } from '../common';
 import { AuthController } from './controllers';
 import { AuthService } from './services';
 import { JwtStrategy, LocalStrategy } from './stategies';
+import { EmailModule } from '../email/email.module';
 
 @Module({
   imports: [
     CommonModule,
+    EmailModule,
     registerViewsModule(__dirname, [AuthController]),
     PassportModule,
     JwtModule.registerAsync({
@@ -30,4 +32,4 @@ import { JwtStrategy, LocalStrategy } from './stategies';
   exports: [AuthService],
   controllers: [AuthController],
 })
-export class AuthModule {}
+export class AuthModule { }

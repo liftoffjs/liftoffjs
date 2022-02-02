@@ -1,5 +1,5 @@
-import React from 'react';
-import ReactDOM from 'react-dom/server';
+import * as React from 'react';
+import * as ReactDOM from 'react-dom/server';
 import { Injectable } from '@nestjs/common';
 import { LiftoffConfig } from '../../common';
 import { createTransport, Transporter } from 'nodemailer';
@@ -13,9 +13,9 @@ type MailOptions = Parameters<Transporter<any>['sendMail']>[0] & {
 
 @Injectable()
 export class EmailService {
-  constructor(private readonly config: LiftoffConfig) {}
+  constructor(private readonly config: LiftoffConfig) { }
 
-  sendMail(mailOptions: MailOptions) {
+  async sendMail(mailOptions: MailOptions) {
     const transport = createTransport(
       this.config.email.transport,
       this.config.email.defaults,

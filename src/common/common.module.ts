@@ -15,4 +15,4 @@ import { EncryptionService, LiftoffConfig } from './services';
   ],
   exports: [EncryptionService, LiftoffConfig],
 })
-export class CommonModule {}
+export class CommonModule { }

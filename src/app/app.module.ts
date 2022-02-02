@@ -9,6 +9,7 @@ import { JwtAuthGuard } from '../auth/guards';
 import { registerViewsModule } from '../common';
 import { DatabaseModule } from '../database/database.module';
 import { UserModule } from '../user/user.module';
+import { EmailModule } from 'src/email/email.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { UserModule } from '../user/user.module';
     }),
     AuthModule,
     DatabaseModule,
+    EmailModule,
     UserModule,
   ],
   controllers: [AppController],
@@ -30,4 +32,4 @@ import { UserModule } from '../user/user.module';
     },
   ],
 })
-export class AppModule {}
+export class AppModule { }

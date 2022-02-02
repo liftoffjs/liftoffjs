@@ -1,6 +1,6 @@
+import * as cookieParser from 'cookie-parser';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app/app.module';
-import * as cookieParser from 'cookie-parser';
 import { LiftoffConfig } from './common';
 
 async function bootstrap() {

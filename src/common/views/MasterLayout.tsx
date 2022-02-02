@@ -7,6 +7,8 @@ declare global {
     interface IntrinsicElements {
       "lo-login-form": React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement>;
       "lo-register-form": React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement>;
+      "lo-forgot-password-form": React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement>;
+      "lo-reset-password-form": React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement>;
     }
   }
 }
@@ -69,6 +71,8 @@ export const MasterLayout: React.FC<{ contain?: boolean }> = (props) => {
 
       <script src="/resources/js/LoginForm.js"></script>
       <script src="/resources/js/RegisterForm.js"></script>
+      <script src="/resources/js/ForgotPasswordForm.js"></script>
+      <script src="/resources/js/ResetPasswordForm.js"></script>
     </body>
   </>;
 }

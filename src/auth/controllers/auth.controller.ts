@@ -1,8 +1,10 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Get,
   Post,
+  Query,
   Render,
   Req,
   Res,
@@ -12,7 +14,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { Request, Response } from 'express';
 import { LiftoffConfig } from '../../common';
 import { User } from '../../user';
-import { RegisterUserDto } from '../dtos';
+import { RegisterUserDto, ResetPasswordDto, ResetPasswordRequestDto } from '../dtos';
 import { AuthService } from '../services';
 
 @Controller('auth')
@@ -20,7 +22,7 @@ export class AuthController {
   constructor(
     private readonly authService: AuthService,
     private readonly config: LiftoffConfig,
-  ) {}
+  ) { }
 
   @Get('login')
   @Render('login')
@@ -48,6 +50,40 @@ export class AuthController {
   ) {
     const user = await this.authService.register(dto);
     return this.handleJwt(req, res, user);
+  }
+
+  @Get('forgot-password')
+  @Render('forgot-password')
+  async forgotPasswordView() {
+    return {};
+  }
+
+  @Post('forgot-password')
+  async forgotPassword(
+    @Body() dto: ResetPasswordRequestDto,
+  ) {
+    const user = await this.authService.initiateResetPasswordWorkflow(dto.username);
+    if (!user) {
+      throw new BadRequestException();
+    }
+  }
+
+  @Get('reset-password')
+  @Render('reset-password')
+  async resetPasswordView(
+    @Query('token') token: string,
+  ) {
+    return { token };
+  }
+
+  @Post('reset-password')
+  async resetPassword(
+    @Body() dto: ResetPasswordDto,
+  ) {
+    const user = await this.authService.resetPassword(dto);
+    if (!user) {
+      throw new BadRequestException();
+    }
   }
 
   private handleJwt(req: Request, res: Response, user: User) {
