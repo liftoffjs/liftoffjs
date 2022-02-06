@@ -1,8 +1,4 @@
-import {
-  ExecutionContext,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
 import { addReactContext } from 'express-tsx-views';
@@ -16,17 +12,11 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     super();
   }
 
-  handleRequest(
-    err: any,
-    user: any,
-    info: any,
-    context: ExecutionContext,
-    status?: any,
-  ) {
-    let requiredRoles = this.reflector.getAllAndOverride<UserRole[]>(
-      ROLES_METADATA_KEY,
-      [context.getHandler(), context.getClass()],
-    );
+  handleRequest(err: any, user: any, info: any, context: ExecutionContext, status?: any) {
+    let requiredRoles = this.reflector.getAllAndOverride<UserRole[]>(ROLES_METADATA_KEY, [
+      context.getHandler(),
+      context.getClass(),
+    ]);
 
     addReactContext(context.switchToHttp().getResponse(), AppContext, { user });
 

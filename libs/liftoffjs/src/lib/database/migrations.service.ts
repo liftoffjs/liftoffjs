@@ -11,7 +11,7 @@ export class MigrationsService {
     return `./migrations`;
   }
 
-  constructor(private readonly orm: MikroORM) { }
+  constructor(private readonly orm: MikroORM) {}
 
   async handleCli(processArgv: string[]) {
     if (processArgv.includes('migrations:up')) {

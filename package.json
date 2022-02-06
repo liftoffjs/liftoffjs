@@ -8,6 +8,7 @@
     "build:prod": "nx run-many --target=build --prod --all",
     "lo:buld": "nx build liftoffjs",
     "test": "nx test",
+    "format": "nx format:write --all",
     "migrations:up": "ts-node --project ./tools/tsconfig.json ./tools/migrations.ts migrations:up",
     "migrations:generate": "ts-node --project ./tools/tsconfig.json ./tools/migrations.ts migrations:generate"
   },

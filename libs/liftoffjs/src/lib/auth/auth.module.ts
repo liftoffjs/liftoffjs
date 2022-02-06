@@ -31,4 +31,4 @@ import { EmailModule } from '../email/email.module';
   exports: [AuthService],
   controllers: [AuthController],
 })
-export class AuthModule { }
+export class AuthModule {}

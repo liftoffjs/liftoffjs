@@ -6,10 +6,7 @@ import { LiftoffConfig } from '../../common';
 import { ViewUserDto } from '../../user';
 
 @Injectable()
-export class JwtStrategy extends PassportStrategy(
-  JwtCookieComboStrategy,
-  'jwt',
-) {
+export class JwtStrategy extends PassportStrategy(JwtCookieComboStrategy, 'jwt') {
   constructor(config: LiftoffConfig) {
     super({
       secretOrPublicKey: config.auth.jwtSecret,
@@ -17,11 +14,6 @@ export class JwtStrategy extends PassportStrategy(
   }
 
   validate(payload: JwtPayload): ViewUserDto {
-    return new ViewUserDto(
-      payload.user_id,
-      payload.user_username,
-      payload.user_email,
-      payload.user_role,
-    );
+    return new ViewUserDto(payload.user_id, payload.user_username, payload.user_email, payload.user_role);
   }
 }

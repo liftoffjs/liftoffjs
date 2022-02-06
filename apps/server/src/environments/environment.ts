@@ -1,31 +1,31 @@
 import { LiftoffConfig } from '@liftoffjs/core';
 
 export default <Partial<LiftoffConfig>>{
-  "env": "dev",
-  "url": "http://localhost:3000",
-  "auth": {
-    "passwordHash": "myHash",
-    "jwtSecret": "mysecret",
-    "jwtExpire": "3600s"
+  env: 'dev',
+  url: 'http://localhost:3000',
+  auth: {
+    passwordHash: 'myHash',
+    jwtSecret: 'mysecret',
+    jwtExpire: '3600s',
   },
-  "database": {
-    "type": "sqlite",
-    "dbName": "data/database.sqlite3",
-    "entities": ['./apps/server/**/*.entity.ts', './libs/**/*.entity.ts'],
-    "entitiesTs": ['./apps/server/**/*.entity.ts', './libs/**/*.entity.ts'],
+  database: {
+    type: 'sqlite',
+    dbName: 'data/database.sqlite3',
+    entities: ['./apps/server/**/*.entity.ts', './libs/**/*.entity.ts'],
+    entitiesTs: ['./apps/server/**/*.entity.ts', './libs/**/*.entity.ts'],
   },
-  "email": {
-    "transport": {
-      "host": "smtp.ethereal.email",
-      "port": 587,
-      "secure": false,
-      "auth": {
-        "user": "",
-        "pass": ""
-      }
+  email: {
+    transport: {
+      host: 'smtp.ethereal.email',
+      port: 587,
+      secure: false,
+      auth: {
+        user: '',
+        pass: '',
+      },
     },
-    "defaults": {
-      "from": "test@liftoffjs.com"
-    }
-  }
+    defaults: {
+      from: 'test@liftoffjs.com',
+    },
+  },
 };

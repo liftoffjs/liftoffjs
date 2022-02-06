@@ -10,19 +10,17 @@ import { EmailModule } from './email/email.module';
 
 @Module({})
 export class LiftoffModule {
-  static forRootAsync(options: {
-    environment: Partial<LiftoffConfig>
-  }): DynamicModule {
+  static forRootAsync(options: { environment: Partial<LiftoffConfig> }): DynamicModule {
     return {
       module: LiftoffModule,
       imports: [
         ServeStaticModule.forRoot({
           rootPath: `${__dirname}/../client`, // join(__dirname, '../..', 'assets'),
           serveRoot: '/client',
-          exclude: [`${__dirname}/../client/index.html`]
+          exclude: [`${__dirname}/../client/index.html`],
         }),
         AuthModule,
-        CommonModule.forRootAsync({ environment: options.environment, }),
+        CommonModule.forRootAsync({ environment: options.environment }),
         DatabaseModule,
         EmailModule,
         UserModule,
@@ -34,6 +32,6 @@ export class LiftoffModule {
           useClass: JwtAuthGuard,
         },
       ],
-    }
+    };
   }
 }

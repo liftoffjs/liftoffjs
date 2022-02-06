@@ -14,8 +14,8 @@ export class AuthService {
     private readonly jwtService: JwtService,
     private readonly encryptionService: EncryptionService,
     private readonly userService: UserService,
-    private readonly emailService: EmailService,
-  ) { }
+    private readonly emailService: EmailService
+  ) {}
 
   /**
    * @param user The user with the cleartext password to validate
@@ -28,10 +28,7 @@ export class AuthService {
       return null; // TODO: throw custom exception and catch
     }
 
-    const isCorrectPassword = await this.encryptionService.compare(
-      user.password,
-      storedUser.password,
-    );
+    const isCorrectPassword = await this.encryptionService.compare(user.password, storedUser.password);
 
     if (!isCorrectPassword) {
       return null; // TODO: throw custom exception and catch
@@ -76,12 +73,12 @@ export class AuthService {
       tsx: {
         component: ResetPasswordEmail,
         props: {
-          url: `${this.config.url}/auth/reset-password?token=${resetPasswordToken}`
+          url: `${this.config.url}/auth/reset-password?token=${resetPasswordToken}`,
         },
       },
     });
 
-    return this.userService.update(user, { resetPasswordToken })
+    return this.userService.update(user, { resetPasswordToken });
   }
 
   async resetPassword(resetDetails: ResetPasswordDto) {

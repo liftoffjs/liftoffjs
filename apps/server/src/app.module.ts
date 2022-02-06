@@ -10,7 +10,7 @@ import { TodoModule } from './todo/todo.module';
     LiftoffModule.forRootAsync({
       environment: environment as any,
     }),
-    TodoModule
+    TodoModule,
   ],
 })
-export class AppModule { }
+export class AppModule {}

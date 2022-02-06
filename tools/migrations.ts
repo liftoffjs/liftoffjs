@@ -10,11 +10,11 @@ import { MigrationsService } from '../libs/liftoffjs/src/lib/database/migrations
   imports: [
     DatabaseModule,
     CommonModule.forRootAsync({
-      environment
-    })
-  ]
+      environment,
+    }),
+  ],
 })
-class MigrationsModule { }
+class MigrationsModule {}
 
 async function bootstrap() {
   const app = await NestFactory.create(MigrationsModule);

@@ -1,14 +1,4 @@
-import {
-  BadRequestException,
-  Body,
-  Controller,
-  Get,
-  Post,
-  Query,
-  Req,
-  Res,
-  UseGuards,
-} from '@nestjs/common';
+import { BadRequestException, Body, Controller, Get, Post, Query, Req, Res, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { Request, Response } from 'express';
 import { LiftoffConfig } from '../../common';
@@ -20,10 +10,7 @@ import { ForgotPasswordView, LoginView, RegisterView, ResetPasswordView } from '
 
 @Controller()
 export class AuthController {
-  constructor(
-    private readonly authService: AuthService,
-    private readonly config: LiftoffConfig,
-  ) { }
+  constructor(private readonly authService: AuthService, private readonly config: LiftoffConfig) {}
 
   @Get('auth/login')
   loginView() {
@@ -45,7 +32,7 @@ export class AuthController {
   async register(
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
-    @Body() dto: RegisterUserDto,
+    @Body() dto: RegisterUserDto
   ) {
     const user = await this.authService.register(dto);
     return this.handleJwt(req, res, user);
@@ -57,9 +44,7 @@ export class AuthController {
   }
 
   @Post('api/auth/forgot-password')
-  async forgotPassword(
-    @Body() dto: ResetPasswordRequestDto,
-  ) {
+  async forgotPassword(@Body() dto: ResetPasswordRequestDto) {
     const user = await this.authService.initiateResetPasswordWorkflow(dto.username);
     if (!user) {
       throw new BadRequestException();
@@ -67,16 +52,12 @@ export class AuthController {
   }
 
   @Get('auth/reset-password')
-  async resetPasswordView(
-    @Query('token') token: string,
-  ) {
+  async resetPasswordView(@Query('token') token: string) {
     return new JsxResult(ResetPasswordView, { token });
   }
 
   @Post('api/auth/reset-password')
-  async resetPassword(
-    @Body() dto: ResetPasswordDto,
-  ) {
+  async resetPassword(@Body() dto: ResetPasswordDto) {
     const user = await this.authService.resetPassword(dto);
     if (!user) {
       throw new BadRequestException();

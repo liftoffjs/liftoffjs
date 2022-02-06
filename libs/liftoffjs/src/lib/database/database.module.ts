@@ -26,4 +26,4 @@ import { MigrationsService } from './migrations.service';
   providers: [MigrationsService],
   exports: [MigrationsService],
 })
-export class DatabaseModule { }
+export class DatabaseModule {}

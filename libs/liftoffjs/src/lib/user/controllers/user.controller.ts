@@ -16,6 +16,6 @@ export class UserController {
   @ApiAuth()
   async index() {
     const users = await this.userService.repository.findAll();
-    return users.map((u) => ViewUserDto.fromEntity(u));
+    return users.map(u => ViewUserDto.fromEntity(u));
   }
 }

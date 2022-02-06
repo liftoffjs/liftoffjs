@@ -13,19 +13,13 @@ type MailOptions = Parameters<Transporter<any>['sendMail']>[0] & {
 
 @Injectable()
 export class EmailService {
-  constructor(private readonly config: LiftoffConfig) { }
+  constructor(private readonly config: LiftoffConfig) {}
 
   async sendMail(mailOptions: MailOptions) {
-    const transport = createTransport(
-      this.config.email.transport,
-      this.config.email.defaults,
-    );
+    const transport = createTransport(this.config.email.transport, this.config.email.defaults);
     if (mailOptions.tsx) {
       mailOptions.text = null;
-      mailOptions.html = this.renderTsx(
-        mailOptions.tsx.component,
-        mailOptions.tsx.props,
-      );
+      mailOptions.html = this.renderTsx(mailOptions.tsx.component, mailOptions.tsx.props);
     }
     return transport.sendMail(mailOptions);
   }

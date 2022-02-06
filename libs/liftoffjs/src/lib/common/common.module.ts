@@ -17,6 +17,6 @@ export class CommonModule {
         },
       ],
       exports: [EncryptionService, LiftoffConfig],
-    }
+    };
   }
 }
