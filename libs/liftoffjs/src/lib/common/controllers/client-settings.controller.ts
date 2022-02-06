@@ -3,11 +3,9 @@ import { LiftoffConfig } from '..';
 
 @Controller()
 export class ClientSettingsController {
-  constructor(
-    private readonly config: LiftoffConfig,
-  ) { }
+  constructor(private readonly config: LiftoffConfig) {}
 
-  @Get("api/client-settings")
+  @Get('api/client-settings')
   getClientSettings() {
     return this.config.clientSettings;
   }

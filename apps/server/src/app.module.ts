@@ -7,9 +7,9 @@ import { TodoModule } from './todo/todo.module';
 @Module({
   imports: [
     LiftoffModule.forRoot({
-      config: require("./assets/liftoffconfig.json"),
+      config: require('./assets/liftoffconfig.json'),
     }),
     TodoModule,
   ],
 })
-export class AppModule { }
+export class AppModule {}

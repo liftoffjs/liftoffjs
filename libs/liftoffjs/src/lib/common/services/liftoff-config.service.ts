@@ -10,7 +10,7 @@ export interface Auth {
   jwtExpire: string;
 }
 
-export interface Database extends MikroOrmModuleOptions<IDatabaseDriver<Connection>> { }
+export interface Database extends MikroOrmModuleOptions<IDatabaseDriver<Connection>> {}
 
 export interface Email {
   transport: Parameters<typeof createTransport>[0];
@@ -19,7 +19,7 @@ export interface Email {
 
 @Injectable()
 export class LiftoffConfig {
-  constructor() { }
+  constructor() {}
 
   env: string;
   url: string;
@@ -40,11 +40,11 @@ export class LiftoffConfig {
 
   private validate() {
     const errors = [
-      ...this.assertStringValue(this.env, "env"),
-      ...this.assertStringValue(this.url, "url"),
-      ...this.assertStringValue(this.auth.jwtExpire, "auth.jwtExpire"),
-      ...this.assertStringValue(this.auth.jwtSecret, "auth.jwtSecret"),
-      ...this.assertStringValue(this.auth.passwordHash, "auth.passwordHash"),
+      ...this.assertStringValue(this.env, 'env'),
+      ...this.assertStringValue(this.url, 'url'),
+      ...this.assertStringValue(this.auth.jwtExpire, 'auth.jwtExpire'),
+      ...this.assertStringValue(this.auth.jwtSecret, 'auth.jwtSecret'),
+      ...this.assertStringValue(this.auth.passwordHash, 'auth.passwordHash'),
     ];
 
     if (errors.length) {
