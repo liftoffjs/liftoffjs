@@ -3,7 +3,7 @@ import { EncryptionService, LiftoffConfig } from './services';
 
 @Module({})
 export class CommonModule {
-  static forRootAsync(options: { environment: Partial<LiftoffConfig> }): DynamicModule {
+  static forRoot(options: { config: Partial<LiftoffConfig> }): DynamicModule {
     return {
       module: CommonModule,
       global: true,
@@ -12,7 +12,7 @@ export class CommonModule {
         {
           provide: LiftoffConfig,
           useFactory: () => {
-            return LiftoffConfig.load(options.environment);
+            return LiftoffConfig.load(options.config);
           },
         },
       ],

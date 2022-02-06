@@ -29,7 +29,6 @@
     "cookie-parser": "^1.4.6",
     "core-js": "^3.6.5",
     "express-tsx-views": "^1.4.6",
-    "nestjs-tsx-views": "^1.2.5",
     "nodemailer": "^6.7.2",
     "passport": "^0.5.2",
     "passport-jwt-cookiecombo": "^1.0.5",

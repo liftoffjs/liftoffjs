@@ -1,20 +1,17 @@
-import { MikroORM } from '@mikro-orm/core';
-import { IMigrator } from '@mikro-orm/core/typings';
 import { Module } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { CommonModule, DatabaseModule } from '../libs/liftoffjs/src';
-import environment from '../apps/server/src/environments/environment';
 import { MigrationsService } from '../libs/liftoffjs/src/lib/database/migrations.service';
 
 @Module({
   imports: [
     DatabaseModule,
-    CommonModule.forRootAsync({
-      environment,
+    CommonModule.forRoot({
+      config: require("../apps/server/src/assets/liftoffconfig.json"),
     }),
   ],
 })
-class MigrationsModule {}
+class MigrationsModule { }
 
 async function bootstrap() {
   const app = await NestFactory.create(MigrationsModule);

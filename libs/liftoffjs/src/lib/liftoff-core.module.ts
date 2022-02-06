@@ -7,10 +7,11 @@ import { CommonModule, LiftoffConfig } from './common';
 import { DatabaseModule } from './database/database.module';
 import { UserModule } from './user/user.module';
 import { EmailModule } from './email/email.module';
+import { ClientSettingsController } from './common/controllers';
 
 @Module({})
 export class LiftoffModule {
-  static forRootAsync(options: { environment: Partial<LiftoffConfig> }): DynamicModule {
+  static forRoot(options: { config: Partial<LiftoffConfig> }): DynamicModule {
     return {
       module: LiftoffModule,
       imports: [
@@ -20,12 +21,12 @@ export class LiftoffModule {
           exclude: [`${__dirname}/../client/index.html`],
         }),
         AuthModule,
-        CommonModule.forRootAsync({ environment: options.environment }),
+        CommonModule.forRoot({ config: options.config }),
         DatabaseModule,
         EmailModule,
         UserModule,
       ],
-      controllers: [],
+      controllers: [ClientSettingsController],
       providers: [
         {
           provide: APP_GUARD,
