@@ -1,0 +1,9 @@
+{
+  "version": 2,
+  "projects": {
+    "liftoffjs": "libs/liftoffjs",
+    "client": "apps/client",
+    "client-e2e": "apps/client-e2e",
+    "server": "apps/server"
+  }
+}
