@@ -15,7 +15,7 @@ export class AuthService {
     private readonly encryptionService: EncryptionService,
     private readonly userService: UserService,
     private readonly emailService: EmailService
-  ) { }
+  ) {}
 
   /**
    * @param user The user with the cleartext password to validate

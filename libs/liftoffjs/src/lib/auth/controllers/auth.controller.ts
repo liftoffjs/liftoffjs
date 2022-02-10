@@ -10,7 +10,7 @@ import { ForgotPasswordView, LoginView, RegisterView, ResetPasswordView } from '
 
 @Controller()
 export class AuthController {
-  constructor(private readonly authService: AuthService, private readonly config: LiftoffConfig) { }
+  constructor(private readonly authService: AuthService, private readonly config: LiftoffConfig) {}
 
   @Get('auth/login')
   loginView() {

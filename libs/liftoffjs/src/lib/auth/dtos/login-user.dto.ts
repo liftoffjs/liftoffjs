@@ -3,7 +3,7 @@ import { IsNotEmpty } from 'class-validator';
 
 export class LoginUserDto {
   @IsNotEmpty()
-  @Transform((x) => (<string>x.value)?.toLocaleLowerCase()?.trim())
+  @Transform(x => (<string>x.value)?.toLocaleLowerCase()?.trim())
   readonly usernameOrEmail: string;
 
   @IsNotEmpty()

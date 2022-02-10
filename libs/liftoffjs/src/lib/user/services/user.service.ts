@@ -8,7 +8,7 @@ export class UserService {
   constructor(
     @InjectRepository(User)
     readonly repository: EntityRepository<User>
-  ) { }
+  ) {}
 
   async register(user: User) {
     await this.repository.persistAndFlush(user);
@@ -23,16 +23,13 @@ export class UserService {
 
   findByUsernameOrEmail(usernameOrEmail: string) {
     return this.repository.findOne({
-      $or: [
-        { username: usernameOrEmail },
-        { email: usernameOrEmail }
-      ]
+      $or: [{ username: usernameOrEmail }, { email: usernameOrEmail }],
     });
   }
 
   findByResetPasswordToken(resetPasswordToken: string) {
     return this.repository.findOne({
-      resetPasswordToken
+      resetPasswordToken,
     });
   }
 }

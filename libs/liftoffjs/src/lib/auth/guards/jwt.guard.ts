@@ -20,6 +20,8 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
 
     addReactContext(context.switchToHttp().getResponse(), AppContext, { user });
 
+    context.switchToHttp().getRequest().disableCsrf = true;
+
     if (requiredRoles?.length && !requiredRoles.includes(user?.role)) {
       throw new UnauthorizedException();
     }
