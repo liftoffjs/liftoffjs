@@ -1,5 +1,12 @@
+import { Transform } from 'class-transformer';
+import { IsNotEmpty } from 'class-validator';
+
 export class LoginUserDto {
-  readonly username: string;
+  @IsNotEmpty()
+  @Transform((x) => (<string>x.value)?.toLocaleLowerCase()?.trim())
+  readonly usernameOrEmail: string;
+
+  @IsNotEmpty()
   readonly password: string;
 
   constructor(data?: Partial<LoginUserDto>) {

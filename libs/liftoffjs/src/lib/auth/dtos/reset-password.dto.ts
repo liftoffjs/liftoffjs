@@ -1,6 +1,10 @@
+import { IsNotEmpty } from 'class-validator';
+
 export class ResetPasswordDto {
-  readonly username: string;
+  @IsNotEmpty()
   readonly password: string;
+
+  @IsNotEmpty()
   readonly token: string;
 
   constructor(data?: Partial<ResetPasswordDto>) {

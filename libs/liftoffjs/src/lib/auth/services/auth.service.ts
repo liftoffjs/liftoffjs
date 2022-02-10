@@ -15,14 +15,14 @@ export class AuthService {
     private readonly encryptionService: EncryptionService,
     private readonly userService: UserService,
     private readonly emailService: EmailService
-  ) {}
+  ) { }
 
   /**
    * @param user The user with the cleartext password to validate
    * @returns The user if successful, null otherwise.
    */
   async login(user: LoginUserDto) {
-    const storedUser = await this.userService.findByUsername(user.username);
+    const storedUser = await this.userService.findByUsernameOrEmail(user.usernameOrEmail);
 
     if (!storedUser) {
       return null; // TODO: throw custom exception and catch
@@ -38,6 +38,7 @@ export class AuthService {
   }
 
   async register(user: RegisterUserDto) {
+    // TODO: catch unique key exceptions and throw
     const hashedPassword = await this.encryptionService.hash(user.password, null);
     const encryptedUser = new User({
       ...user,
@@ -59,8 +60,8 @@ export class AuthService {
     };
   }
 
-  async initiateResetPasswordWorkflow(username: string) {
-    const user = await this.userService.findByUsername(username);
+  async initiateResetPasswordWorkflow(usernameOrEmail: string) {
+    const user = await this.userService.findByUsernameOrEmail(usernameOrEmail);
     if (!user) {
       return null; // TODO: throw custom exception and catch
     }
@@ -82,8 +83,8 @@ export class AuthService {
   }
 
   async resetPassword(resetDetails: ResetPasswordDto) {
-    const user = await this.userService.findByUsername(resetDetails.username);
-    if (!user.resetPasswordToken?.length) {
+    const user = await this.userService.findByResetPasswordToken(resetDetails.token);
+    if (!user?.resetPasswordToken?.length) {
       return null; // TODO: throw custom exception and catch
     }
     if (user.resetPasswordToken !== resetDetails.token) {

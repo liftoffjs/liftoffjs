@@ -1,5 +1,5 @@
-import { DynamicModule, Module } from '@nestjs/common';
-import { APP_GUARD } from '@nestjs/core';
+import { ClassSerializerInterceptor, DynamicModule, Module } from '@nestjs/common';
+import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { AuthModule } from './auth/auth.module';
 import { JwtAuthGuard } from './auth/guards';
@@ -31,6 +31,10 @@ export class LiftoffModule {
         {
           provide: APP_GUARD,
           useClass: JwtAuthGuard,
+        },
+        {
+          provide: APP_INTERCEPTOR,
+          useClass: ClassSerializerInterceptor,
         },
       ],
     };

@@ -26,6 +26,8 @@
     "@nestjs/serve-static": "^2.2.2",
     "autoprefixer": "^10.4.2",
     "bcrypt": "^5.0.1",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.13.2",
     "cookie-parser": "^1.4.6",
     "core-js": "^3.6.5",
     "express-tsx-views": "^1.4.6",

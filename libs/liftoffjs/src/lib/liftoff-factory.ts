@@ -1,9 +1,9 @@
-import { NestApplicationOptions } from '@nestjs/common';
+import { BadRequestException, NestApplicationOptions, ValidationPipe } from '@nestjs/common';
 import { AbstractHttpAdapter, NestFactory } from '@nestjs/core';
-import { ExpressAdapter, NestExpressApplication } from '@nestjs/platform-express';
-import * as cookieParser from 'cookie-parser';
+import { NestExpressApplication } from '@nestjs/platform-express';
 import { LiftoffConfig } from './common';
 import { JsxInterceptor } from './common/viewrendering';
+import * as cookieParser from 'cookie-parser';
 
 export class LiftoffFactory {
   static async create(
@@ -13,16 +13,29 @@ export class LiftoffFactory {
   ) {
     const app = options
       ? await NestFactory.create<NestExpressApplication>(
-          module,
-          httpAdapterOrOptions as AbstractHttpAdapter,
-          options
-        )
+        module,
+        httpAdapterOrOptions as AbstractHttpAdapter,
+        options
+      )
       : await NestFactory.create<NestExpressApplication>(
-          module,
-          httpAdapterOrOptions as NestApplicationOptions
-        );
+        module,
+        httpAdapterOrOptions as NestApplicationOptions
+      );
+
     app.use(cookieParser(app.get(LiftoffConfig).auth.jwtSecret));
+
     app.useGlobalInterceptors(new JsxInterceptor());
+
+    app.useGlobalPipes(
+      new ValidationPipe({
+        transform: true,
+        whitelist: true,
+        exceptionFactory: (errors) => {
+          throw new BadRequestException(errors);
+        }
+      }),
+    );
+
     return app;
   }
 }

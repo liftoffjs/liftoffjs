@@ -10,7 +10,7 @@ import { ForgotPasswordView, LoginView, RegisterView, ResetPasswordView } from '
 
 @Controller()
 export class AuthController {
-  constructor(private readonly authService: AuthService, private readonly config: LiftoffConfig) {}
+  constructor(private readonly authService: AuthService, private readonly config: LiftoffConfig) { }
 
   @Get('auth/login')
   loginView() {
@@ -45,7 +45,7 @@ export class AuthController {
 
   @Post('api/auth/forgot-password')
   async forgotPassword(@Body() dto: ResetPasswordRequestDto) {
-    const user = await this.authService.initiateResetPasswordWorkflow(dto.username);
+    const user = await this.authService.initiateResetPasswordWorkflow(dto.usernameOrEmail);
     if (!user) {
       throw new BadRequestException();
     }
