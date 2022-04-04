@@ -4,4 +4,5 @@ export * from './lib/auth';
 export * from './lib/common';
 export * from './lib/database';
 export * from './lib/email';
+export * from './lib/files';
 export * from './lib/user';

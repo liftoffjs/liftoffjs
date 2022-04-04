@@ -8,6 +8,7 @@ import { DatabaseModule } from './database/database.module';
 import { UserModule } from './user/user.module';
 import { EmailModule } from './email/email.module';
 import { ClientSettingsController } from './common/controllers';
+import { MulterModule } from '@nestjs/platform-express';
 
 @Module({})
 export class LiftoffModule {
@@ -19,6 +20,9 @@ export class LiftoffModule {
           rootPath: `${__dirname}/../client`, // join(__dirname, '../..', 'assets'),
           serveRoot: '/client',
           exclude: [`${__dirname}/../client/index.html`],
+        }),
+        MulterModule.register({
+          dest: './tmp/uploads',
         }),
         AuthModule,
         CommonModule.forRoot({ config: options.config }),

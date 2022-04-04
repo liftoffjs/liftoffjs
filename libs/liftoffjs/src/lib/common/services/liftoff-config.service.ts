@@ -20,8 +20,24 @@ export interface Email {
   defaults: Parameters<typeof createTransport>[1];
 }
 
+export interface FileStorageDriver {
+  driver: "file";
+  rootPath: string;
+}
+
+export type Storage = FileStorageDriver;
+
 @Injectable()
 export class LiftoffConfig {
+  private static _instance: LiftoffConfig;
+
+  static get instance() {
+    if (!this._instance) {
+      return null;
+    }
+    return this._instance
+  }
+
   constructor() { }
 
   env: string;
@@ -30,6 +46,7 @@ export class LiftoffConfig {
   database: Database;
   email: Email;
   clientSettings: Record<string, any>;
+  storage: Storage;
   security: {
     helmet: HelmetOptions;
     cors: CorsOptions;
@@ -37,9 +54,14 @@ export class LiftoffConfig {
   };
 
   static load(config: Partial<LiftoffConfig>) {
+    if (this._instance) {
+      return this._instance;
+    }
+
     if (!config) {
       throw new Error(`LiftoffJS could not start: liftoffconfig.json could not be loaded.`);
     }
+
     const obj = new LiftoffConfig();
 
     Object.assign(obj, config);
@@ -47,7 +69,9 @@ export class LiftoffConfig {
     obj.validate();
     obj.fillDefaults();
 
-    return obj;
+    this._instance = obj;
+
+    return this._instance;
   }
 
   private validate() {
@@ -79,6 +103,11 @@ export class LiftoffConfig {
     this.security.csrf = this.fillAndOverride(this.security.csrf, {
       cookie: true,
       ignoredRoutePrefixes: ['/api'],
+    });
+
+    this.storage = this.fillAndOverride(this.storage, {
+      driver: "file",
+      rootPath: "./apps/server/storage/uploads",
     });
   }
 

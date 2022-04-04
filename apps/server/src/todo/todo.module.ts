@@ -1,4 +1,7 @@
 import { Module } from '@nestjs/common';
+import { TodoController } from './todo.controller';
 
-@Module({})
-export class TodoModule {}
+@Module({
+  controllers: [TodoController]
+})
+export class TodoModule { }

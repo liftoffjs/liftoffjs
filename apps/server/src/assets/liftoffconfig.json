@@ -9,8 +9,14 @@
   "database": {
     "type": "sqlite",
     "dbName": "data/database.sqlite3",
-    "entities": ["./apps/server/**/*.entity.ts", "./libs/**/*.entity.ts"],
-    "entitiesTs": ["./apps/server/**/*.entity.ts", "./libs/**/*.entity.ts"]
+    "entities": [
+      "./apps/server/**/*.entity.ts",
+      "./libs/**/*.entity.ts"
+    ],
+    "entitiesTs": [
+      "./apps/server/**/*.entity.ts",
+      "./libs/**/*.entity.ts"
+    ]
   },
   "email": {
     "transport": {
@@ -26,5 +32,6 @@
       "from": "test@liftoffjs.com"
     }
   },
-  "clientSettings": {}
+  "clientSettings": null,
+  "storage": null
 }

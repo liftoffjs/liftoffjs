@@ -1,4 +1,4 @@
-import { BadRequestException, NestApplicationOptions, ValidationPipe } from '@nestjs/common';
+import { BadRequestException, ConsoleLogger, NestApplicationOptions, ValidationPipe } from '@nestjs/common';
 import { AbstractHttpAdapter, NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { LiftoffConfig } from './common';
@@ -16,14 +16,14 @@ export class LiftoffFactory {
   ) {
     const app = options
       ? await NestFactory.create<NestExpressApplication>(
-          module,
-          httpAdapterOrOptions as AbstractHttpAdapter,
-          options
-        )
+        module,
+        httpAdapterOrOptions as AbstractHttpAdapter,
+        options
+      )
       : await NestFactory.create<NestExpressApplication>(
-          module,
-          httpAdapterOrOptions as NestApplicationOptions
-        );
+        module,
+        httpAdapterOrOptions as NestApplicationOptions
+      );
 
     const config = app.get(LiftoffConfig);
 
@@ -47,7 +47,8 @@ export class LiftoffFactory {
       if (config.security.csrf.ignoredRoutePrefixes.some(p => req.url.startsWith(p))) {
         return next();
       }
-      return csurf(config.security.csrf);
+      return next();
+      // return csurf(config.security.csrf)(req, res, next);
     });
 
     return app;
