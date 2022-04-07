@@ -17,7 +17,7 @@ export class LiftoffModule {
       module: LiftoffModule,
       imports: [
         ServeStaticModule.forRoot({
-          rootPath: `${__dirname}/../client`, // join(__dirname, '../..', 'assets'),
+          rootPath: `${__dirname}/../client`,
           serveRoot: '/client',
           exclude: [`${__dirname}/../client/index.html`],
         }),

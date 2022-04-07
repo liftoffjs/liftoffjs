@@ -20,6 +20,22 @@ export interface Email {
   defaults: Parameters<typeof createTransport>[1];
 }
 
+export interface ConsoleLoggingConfig {
+  driver: "console";
+
+  /**
+   * @default true
+   */
+  colors?: boolean;
+}
+export interface FileLoggingConfig {
+  driver: "file";
+  rootPath?: string;
+}
+export interface Logging {
+  drivers: Array<ConsoleLoggingConfig | FileLoggingConfig>;
+}
+
 export interface FileStorageDriver {
   driver: "file";
   rootPath: string;
@@ -52,6 +68,7 @@ export class LiftoffConfig {
     cors: CorsOptions;
     csrf: Parameters<typeof csurf>[0] & { ignoredRoutePrefixes?: string[] };
   };
+  logging: Logging;
 
   static load(config: Partial<LiftoffConfig>) {
     if (this._instance) {
@@ -109,6 +126,25 @@ export class LiftoffConfig {
       driver: "file",
       rootPath: "./apps/server/storage/uploads",
     });
+
+    this.logging = this.fillAndOverride(this.logging, {
+      drivers: [
+        { driver: "console" },
+        { driver: "file" }
+      ]
+    });
+
+    for (const loggingDriver of this.logging.drivers) {
+      if (loggingDriver.driver === "console") {
+        if (typeof loggingDriver.colors !== "boolean") {
+          loggingDriver.colors = true;
+        }
+      } else if (loggingDriver.driver === "file") {
+        if (!loggingDriver?.rootPath?.length) {
+          loggingDriver.rootPath = "./apps/server/storage/logs";
+        }
+      }
+    }
   }
 
   private assertStringValue(value: string, key: string) {

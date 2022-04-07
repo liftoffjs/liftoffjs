@@ -33,6 +33,7 @@
     "csurf": "^1.11.0",
     "express-tsx-views": "^1.4.6",
     "helmet": "^5.0.2",
+    "nest-winston": "^1.6.2",
     "nodemailer": "^6.7.2",
     "passport": "^0.5.2",
     "passport-jwt-cookiecombo": "^1.0.5",
@@ -46,7 +47,9 @@
     "rimraf": "^3.0.2",
     "rxjs": "^7.2.0",
     "tailwindcss": "^3.0.18",
-    "tslib": "^2.0.0"
+    "tslib": "^2.0.0",
+    "winston": "^3.7.2",
+    "winston-daily-rotate-file": "^4.6.1"
   },
   "devDependencies": {
     "@mikro-orm/migrations": "^4.5.10",

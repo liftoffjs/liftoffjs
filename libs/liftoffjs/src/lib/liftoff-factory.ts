@@ -1,31 +1,32 @@
-import { BadRequestException, ConsoleLogger, NestApplicationOptions, ValidationPipe } from '@nestjs/common';
-import { AbstractHttpAdapter, NestFactory } from '@nestjs/core';
+import { BadRequestException, NestApplicationOptions, ValidationPipe } from '@nestjs/common';
+import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
-import { LiftoffConfig } from './common';
+import { CommonModule } from './common';
 import { JsxInterceptor } from './common/viewrendering';
 import * as cookieParser from 'cookie-parser';
-import helmet from 'helmet';
 import * as csurf from 'csurf';
+import helmet from 'helmet';
 import { Request, Response, NextFunction } from 'express';
+import { createLiftoffLogger } from './utils';
+
 
 export class LiftoffFactory {
   static async create(
     module: any,
-    httpAdapterOrOptions?: AbstractHttpAdapter | NestApplicationOptions,
     options?: NestApplicationOptions
   ) {
-    const app = options
-      ? await NestFactory.create<NestExpressApplication>(
-        module,
-        httpAdapterOrOptions as AbstractHttpAdapter,
-        options
-      )
-      : await NestFactory.create<NestExpressApplication>(
-        module,
-        httpAdapterOrOptions as NestApplicationOptions
-      );
+    if (!options) {
+      options = {};
+    }
 
-    const config = app.get(LiftoffConfig);
+    const config = CommonModule.config;
+
+    options.logger = createLiftoffLogger(config);
+
+    const app = await NestFactory.create<NestExpressApplication>(
+      module,
+      options
+    );
 
     app.use(cookieParser(config.auth.jwtSecret));
 
