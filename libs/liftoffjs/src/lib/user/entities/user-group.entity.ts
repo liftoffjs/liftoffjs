@@ -1,9 +1,9 @@
 import { Entity, ManyToOne, PrimaryKey, Property } from '@mikro-orm/core';
-import { Transform } from 'class-transformer';
+import { PkOnly } from '../../common';
 import { Group } from './group.entity';
 import { User } from './user.entity';
 
-export const enum UserGroupRole {
+export enum UserGroupRole {
   User = 'user',
   Admin = 'admin',
   Owner = 'owner',
@@ -15,27 +15,11 @@ export class UserGroup {
   id: number;
 
   @ManyToOne({ entity: () => User })
-  @Transform(x => {
-    if (!x?.value) {
-      return null;
-    }
-
-    return {
-      id: x.value.id
-    }
-  })
+  @PkOnly()
   user!: User;
 
   @ManyToOne({ entity: () => Group })
-  @Transform(x => {
-    if (!x?.value) {
-      return null;
-    }
-
-    return {
-      id: x.value.id
-    }
-  })
+  @PkOnly()
   group!: Group;
 
   @Property({ columnType: 'text', default: UserGroupRole.User })

@@ -21,8 +21,6 @@ export class GroupController {
     @Param('id') groupId: number,
   ) {
     const userGroup = await this.userGroupService.findUserGroup(user.id, groupId);
-    const x = await this.userGroupService.repository.findAll();
-    console.log({ user, groupId, userGroup, x });
     if (!userGroup) {
       throw new Error("User does not have permission to manage groups."); // TODO: Custom error
     }

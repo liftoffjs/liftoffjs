@@ -27,9 +27,8 @@ export class UserGroupController {
     if (currentUsersGroupData?.role !== UserGroupRole.Admin && currentUsersGroupData?.role !== UserGroupRole.Owner) {
       throw new Error("User does not have permission to manage groups."); // TODO: Custom error
     }
-
     await this.userGroupService.removeUserFromGroup(dto.userId, dto.groupId);
-    await this.userGroupService.addUserToGroup(dto.userId, dto.groupId, dto.role ?? UserGroupRole.User);
+    return await this.userGroupService.addUserToGroup(dto.userId, dto.groupId, dto.role ?? UserGroupRole.User);
   }
 
   @Delete('api/group/:id/users')

@@ -1,5 +1,5 @@
 import { Collection, Entity, OneToMany, PrimaryKey, Property } from '@mikro-orm/core';
-import { Transform } from 'class-transformer';
+import { TransformCollection } from '../../common';
 import { UserGroup } from './user-group.entity';
 
 @Entity()
@@ -11,10 +11,7 @@ export class Group {
   name: string;
 
   @OneToMany(() => UserGroup, userGroup => userGroup.group)
-  @Transform(x => {
-    console.log(x.constructor.name);
-    return [];
-  })
+  @TransformCollection()
   userGroups = new Collection<UserGroup>(this);
 
   constructor(data?: Partial<Group>) {

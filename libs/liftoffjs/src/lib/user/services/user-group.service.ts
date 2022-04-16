@@ -38,7 +38,6 @@ export class UserGroupService extends BaseEntityService<UserGroup> {
     ])
 
     const existingRole = await this.repository.findOne({ user, group });
-
     if (existingRole) {
       throw new Error("User is already in the group."); // TODO: Custom error
     }
@@ -56,7 +55,7 @@ export class UserGroupService extends BaseEntityService<UserGroup> {
 
   async removeUserFromGroup(userId: number, groupId: number) {
     const userGroup = await this.findUserGroup(userId, groupId);
-    await this.repository.removeAndFlush(userGroup);
+    await this.repository.nativeDelete(userGroup);
   }
 
   async deleteAll(groupId: number) {
