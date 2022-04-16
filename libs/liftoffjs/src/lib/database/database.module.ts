@@ -1,7 +1,7 @@
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { Module } from '@nestjs/common';
 import { CommonModule, LiftoffConfig } from '../common';
-import { User } from '../user';
+import { Group, User, UserGroup } from '../user';
 import { MigrationsService } from './migrations.service';
 
 @Module({
@@ -17,7 +17,7 @@ import { MigrationsService } from './migrations.service';
           ...config.database,
         };
 
-        dbConfig.entities = [User];
+        dbConfig.entities = [User, UserGroup, Group];
 
         return dbConfig;
       },
@@ -26,4 +26,4 @@ import { MigrationsService } from './migrations.service';
   providers: [MigrationsService],
   exports: [MigrationsService],
 })
-export class DatabaseModule {}
+export class DatabaseModule { }

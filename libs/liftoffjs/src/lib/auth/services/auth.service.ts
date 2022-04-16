@@ -15,7 +15,7 @@ export class AuthService {
     private readonly encryptionService: EncryptionService,
     private readonly userService: UserService,
     private readonly emailService: EmailService
-  ) {}
+  ) { }
 
   /**
    * @param user The user with the cleartext password to validate
@@ -39,6 +39,17 @@ export class AuthService {
 
   async register(user: RegisterUserDto) {
     // TODO: catch unique key exceptions and throw
+    const [usedEmail, usedUsername] = await Promise.all([
+      this.userService.findByUsernameOrEmail(user.email),
+      this.userService.findByUsernameOrEmail(user.username),
+    ]);
+    if (usedEmail?.email === user.email || usedUsername?.email === user.email) {
+      throw new Error("This email is in use.");
+    }
+    if (usedEmail?.username === user.username || usedUsername?.username === user.username) {
+      throw new Error("This username is in use.");
+    }
+
     const hashedPassword = await this.encryptionService.hash(user.password, null);
     const encryptedUser = new User({
       ...user,

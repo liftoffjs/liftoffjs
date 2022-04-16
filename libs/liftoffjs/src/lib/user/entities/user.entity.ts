@@ -1,9 +1,11 @@
-import { Entity, PrimaryKey, Property } from '@mikro-orm/core';
+import { Collection, Entity, OneToMany, PrimaryKey, Property } from '@mikro-orm/core';
+import { Exclude, Transform } from 'class-transformer';
+import { UserGroup } from './user-group.entity';
 
 export const enum UserRole {
-  User = 0,
-  Admin = 1,
-  Owner = 2,
+  User = 'user',
+  Admin = 'admin',
+  Owner = 'owner',
 }
 
 @Entity()
@@ -18,13 +20,24 @@ export class User {
   email: string;
 
   @Property()
+  @Exclude()
   password: string;
 
   @Property({ nullable: true })
+  @Exclude()
   resetPasswordToken: string;
 
-  @Property({ default: UserRole.User })
+  @Property({ columnType: 'text', default: UserRole.User })
   role: UserRole;
+
+  @OneToMany(() => UserGroup, userGroup => userGroup.user)
+  @Transform(x => {
+    if (x.value.getSnapshot) {
+      return x.value.getSnapshot();
+    }
+    return [];
+  })
+  userGroups = new Collection<UserGroup>(this);
 
   constructor(data?: Partial<User>) {
     Object.assign(this, data ?? {});

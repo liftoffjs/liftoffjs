@@ -1,19 +1,21 @@
 import { Controller, Get, Req } from '@nestjs/common';
-import { ApiAuth } from '../../auth/decorators';
+import { ApiAuth, ReqUser } from '../../auth/decorators';
 import { UserService } from '../services';
 import { ViewUserDto } from '../dtos';
+import { UserRole } from '../entities';
 
-@Controller('user')
+@Controller('api/user')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(private readonly userService: UserService) { }
 
   @Get('me')
-  async me(@Req() req) {
-    return req.user;
+  @ApiAuth()
+  async me(@ReqUser() user: ViewUserDto, @Req() req) {
+    return user;
   }
 
   @Get('')
-  @ApiAuth()
+  @ApiAuth(UserRole.Admin, UserRole.Owner)
   async index() {
     const users = await this.userService.repository.findAll();
     return users.map(u => ViewUserDto.fromEntity(u));

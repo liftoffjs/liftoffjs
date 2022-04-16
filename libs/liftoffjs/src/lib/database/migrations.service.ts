@@ -11,23 +11,36 @@ export class MigrationsService {
     return `./migrations`;
   }
 
-  constructor(private readonly orm: MikroORM) {}
+  constructor(private readonly orm: MikroORM) { }
 
   async handleCli(processArgv: string[]) {
-    if (processArgv.includes('migrations:up')) {
-      console.log(`Handling "migrations:up"...`);
-      await this.run();
-    } else if (processArgv.includes('migrations:generate')) {
-      console.log(`Handling "migrations:generate"...`);
-      await this.generate();
+    try {
+      if (processArgv.includes('migrations:up')) {
+        console.log(`Handling "migrations:up"...`);
+        await this.run();
+      } else if (processArgv.includes('migrations:generate')) {
+        console.log(`Handling "migrations:generate"...`);
+        await this.generate();
+      }
+    } catch (err) {
+      console.error(err);
     }
   }
 
   async run() {
-    await this.migrator.up();
+    const results = await this.migrator.up();
+    if (!results.length) {
+      console.log("No pending migrations found.");
+    } else {
+      console.log(`Ran ${results.length} new migration(s):`);
+      results.forEach(result => {
+        console.log(`\t* ${result.path}`);
+      });
+    }
   }
 
   async generate() {
-    await this.migrator.createMigration(this.migrationsPath);
+    const result = await this.migrator.createMigration(this.migrationsPath);
+    console.log(`Wrote migration to ${result.fileName}`);
   }
 }

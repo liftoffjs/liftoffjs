@@ -1,24 +1,20 @@
 import { EntityRepository } from '@mikro-orm/core';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { Injectable } from '@nestjs/common';
+import { BaseEntityService } from '../../common/services/base-entity-service';
 import { User } from '../entities';
 
 @Injectable()
-export class UserService {
+export class UserService extends BaseEntityService<User> {
   constructor(
     @InjectRepository(User)
-    readonly repository: EntityRepository<User>
-  ) {}
-
-  async register(user: User) {
-    await this.repository.persistAndFlush(user);
-    return user;
+    repository: EntityRepository<User>
+  ) {
+    super(repository);
   }
 
-  async update(user: User, userPartial: Partial<User>) {
-    Object.keys(userPartial).forEach(key => (user[key] = userPartial[key]));
-    await this.repository.persistAndFlush(user);
-    return user;
+  register(user: User) {
+    return this.create(user);
   }
 
   findByUsernameOrEmail(usernameOrEmail: string) {
