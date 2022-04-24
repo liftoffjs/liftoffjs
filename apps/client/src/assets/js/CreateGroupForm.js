@@ -1,18 +1,15 @@
 customElements.define(
-  'lo-login-form',
-  class LoginFormComponent extends HTMLElement {
-    formId = 'login-form';
-    formAction = '/api/auth/login';
+  'lo-create-group-form',
+  class CreateGroupFormComponent extends HTMLElement {
+    formId = 'create-group-form';
+    formAction = '/api/group';
     formFields = {
-      username: 'username',
-      password: 'password',
+      name: 'name',
     };
-    headers = {
-      'Set-Cookie': () => this.getAttribute('set-cookie'),
-    };
+    headers = {};
     onSuccess = response => {
-      if (response.access_token) {
-        location.href = this.getAttribute('redirect-to');
+      if (response) {
+        location.reload();
       }
     };
 

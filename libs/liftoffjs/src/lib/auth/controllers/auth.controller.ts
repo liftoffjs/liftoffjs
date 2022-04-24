@@ -10,7 +10,7 @@ import { ForgotPasswordView, LoginView, RegisterView, ResetPasswordView } from '
 
 @Controller()
 export class AuthController {
-  constructor(private readonly authService: AuthService, private readonly config: LiftoffConfig) {}
+  constructor(private readonly authService: AuthService, private readonly config: LiftoffConfig) { }
 
   @Get('auth/login')
   loginView() {
@@ -47,6 +47,7 @@ export class AuthController {
   async forgotPassword(@Body() dto: ResetPasswordRequestDto) {
     const user = await this.authService.initiateResetPasswordWorkflow(dto.usernameOrEmail);
     if (!user) {
+      // TODO: handle properly
       throw new BadRequestException();
     }
   }
@@ -60,6 +61,7 @@ export class AuthController {
   async resetPassword(@Body() dto: ResetPasswordDto) {
     const user = await this.authService.resetPassword(dto);
     if (!user) {
+      // TODO: handle properly
       throw new BadRequestException();
     }
   }
@@ -67,6 +69,7 @@ export class AuthController {
   private handleJwt(req: Request, res: Response, user: User) {
     const jwt = this.authService.generateJwt(user);
 
+    // TODO: move to service
     if (req.header('set-cookie')?.[0] === 'true') {
       res.cookie('jwt', jwt.access_token, {
         secure: this.config.env !== 'dev',

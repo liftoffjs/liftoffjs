@@ -1,4 +1,4 @@
-import { EntityRepository, FilterQuery } from '@mikro-orm/core';
+import { EntityRepository, FilterQuery, FindOptions } from '@mikro-orm/core';
 
 export abstract class BaseEntityService<T extends { id: string | number }> {
   constructor(
@@ -10,12 +10,20 @@ export abstract class BaseEntityService<T extends { id: string | number }> {
     return entity;
   }
 
-  findOne(id: T["id"]) {
+  findOne(id: T["id"], populate?: any) {
     const where: FilterQuery<T> = {
       id,
     } as any;
 
-    return this.repository.findOne(where);
+    return this.repository.findOne(where, populate);
+  }
+
+  findMany(ids: Array<T["id"]>) {
+    const where: FindOptions<T> = {
+      id: { $in: ids }
+    } as any;
+
+    return this.repository.findAll(where);
   }
 
   async update(entity: T, entityPartial: Partial<T>, allowedKeys?: Array<keyof T>) {

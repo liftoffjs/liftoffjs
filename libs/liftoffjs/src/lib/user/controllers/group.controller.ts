@@ -1,20 +1,28 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Req } from '@nestjs/common';
-import { ApiAuth } from '../../auth/decorators';
-import { ReqUser } from '../../auth/decorators/req-user.decorator';
-import { ViewUserDto } from '../dtos';
-import { CreateGroupDto } from '../dtos/create-group.dto';
-import { UpdateGroupDto } from '../dtos/update-group.dto';
+import { ApiAuth, ReqUser } from '../../auth/decorators';
+import { JsxResult } from '../../common';
+import { CreateGroupDto, ViewUserDto, UpdateGroupDto } from '../dtos';
 import { Group, UserGroupRole } from '../entities';
 import { GroupService, UserGroupService } from '../services';
+import { ManageGroupsView, ManageGroupView } from '../views';
 
-@Controller('api/group')
+@Controller('')
 export class GroupController {
   constructor(
     private readonly groupService: GroupService,
     private readonly userGroupService: UserGroupService,
   ) { }
 
-  @Get(':id')
+  @Get('group')
+  @ApiAuth()
+  async manageGroupsView(
+    @ReqUser() user: ViewUserDto,
+  ) {
+    const userGroups = await this.userGroupService.findUserGroups(user.id);
+    return new JsxResult(ManageGroupsView, { userGroups });
+  }
+
+  @Get('api/group/:id')
   @ApiAuth()
   async findOne(
     @ReqUser() user: ViewUserDto,
@@ -25,10 +33,26 @@ export class GroupController {
       throw new Error("User does not have permission to manage groups."); // TODO: Custom error
     }
 
-    return await this.groupService.findOne(groupId);
+    return await this.groupService.findOne(groupId, ['userGroups.user']);
   }
 
-  @Post('')
+  @Get('group/:id')
+  @ApiAuth()
+  async viewOne(
+    @ReqUser() user: ViewUserDto,
+    @Param('id') groupId: number,
+  ) {
+    const userGroup = await this.userGroupService.findUserGroup(user.id, groupId);
+    if (!userGroup) {
+      throw new Error("User does not have permission to manage groups."); // TODO: Handle unauthed view
+    }
+
+    return new JsxResult(ManageGroupView, {
+      group: await this.groupService.findOne(groupId, ['userGroups.user'])
+    });
+  }
+
+  @Post('api/group')
   @ApiAuth()
   async create(
     @ReqUser() user: ViewUserDto,
@@ -41,7 +65,7 @@ export class GroupController {
     return group;
   }
 
-  @Put(':id')
+  @Put('api/group/:id')
   @ApiAuth()
   async update(
     @ReqUser() user: ViewUserDto,
@@ -57,7 +81,7 @@ export class GroupController {
     return this.groupService.update(group, dto);
   }
 
-  @Delete(':id')
+  @Delete('api/group/:id')
   @ApiAuth()
   async delete(
     @ReqUser() user: ViewUserDto,

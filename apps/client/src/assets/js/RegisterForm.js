@@ -1,46 +1,65 @@
-class RegisterFormComponent extends HTMLElement {
-  constructor() {
-    super();
-
-    const form = this.#createForm();
-
-    Array.from(this.children).forEach(child => {
-      if (child.id !== 'register-form') {
-        form.appendChild(child);
+customElements.define(
+  'lo-register-form',
+  class RegisterFormComponent extends HTMLElement {
+    formId = 'register-form';
+    formAction = '/api/auth/register';
+    formFields = {
+      username: 'username',
+      email: 'email',
+      password: 'password',
+    };
+    headers = {
+      'Set-Cookie': () => this.getAttribute('set-cookie'),
+    };
+    onSuccess = response => {
+      if (response.access_token) {
+        location.href = this.getAttribute('redirect-to');
       }
-    });
-  }
+    };
 
-  #createForm() {
-    const form = document.createElement('form');
+    constructor() {
+      super();
 
-    form.id = 'register-form';
+      const form = this.#createForm();
 
-    form.onsubmit = ev => {
-      ev.preventDefault();
-      fetch('/api/auth/register', {
-        method: 'POST',
-        headers: {
+      Array.from(this.children).forEach(child => {
+        if (child.id !== this.formId) {
+          form.appendChild(child);
+        }
+      });
+    }
+
+    #createForm() {
+      const form = document.createElement('form');
+      form.id = this.formId;
+
+      form.onsubmit = ev => {
+        ev.preventDefault();
+
+        const allHeaders = {
           Accept: 'application/json',
           'Content-Type': 'application/json',
-          'Set-Cookie': this.getAttribute('set-cookie'),
-        },
-        body: JSON.stringify({
-          username: this.querySelector("input[name='username']").value,
-          email: this.querySelector("input[name='email']").value,
-          password: this.querySelector("input[name='password']").value,
-        }),
-        credentials: 'include',
-      })
-        .then(response => response.json())
-        .then(json => {
-          if (json.access_token) {
-            location.href = this.getAttribute('redirect-to');
-          }
+        };
+        Object.keys(this.headers).forEach(header => {
+          allHeaders[header] = this.headers[header]();
         });
-    };
-    return this.appendChild(form);
-  }
-}
 
-customElements.define('lo-register-form', RegisterFormComponent);
+        const body = {};
+        Object.keys(this.formFields).forEach(bodyKey => {
+          body[bodyKey] = this.querySelector(`input[name='${this.formFields[bodyKey]}']`).value;
+        });
+
+        fetch(this.formAction, {
+          method: 'POST',
+          headers: allHeaders,
+          body: JSON.stringify(body),
+          credentials: 'include',
+        })
+          .then(response => response.json())
+          .then(json => this.onSuccess(json));
+      };
+
+      return this.appendChild(form);
+    }
+  }
+);

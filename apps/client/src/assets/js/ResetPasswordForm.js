@@ -1,45 +1,63 @@
-class ResetPasswordFormComponent extends HTMLElement {
-  constructor() {
-    super();
-
-    const form = this.#createForm();
-
-    Array.from(this.children).forEach(child => {
-      if (child.id !== 'reset-password-form') {
-        form.appendChild(child);
+customElements.define(
+  'lo-reset-password-form',
+  class ResetPasswordFormComponent extends HTMLElement {
+    formId = 'reset-password-form';
+    formAction = '/api/auth/reset-password';
+    formFields = {
+      token: 'token',
+      username: 'username',
+      password: 'password',
+    };
+    headers = {};
+    onSuccess = response => {
+      if (response) {
+        location.href = this.getAttribute('redirect-to');
       }
-    });
-  }
+    };
 
-  #createForm() {
-    const form = document.createElement('form');
+    constructor() {
+      super();
 
-    form.id = 'reset-password-form';
+      const form = this.#createForm();
 
-    form.onsubmit = ev => {
-      ev.preventDefault();
-      fetch('/api/auth/reset-password', {
-        method: 'POST',
-        headers: {
+      Array.from(this.children).forEach(child => {
+        if (child.id !== this.formId) {
+          form.appendChild(child);
+        }
+      });
+    }
+
+    #createForm() {
+      const form = document.createElement('form');
+      form.id = this.formId;
+
+      form.onsubmit = ev => {
+        ev.preventDefault();
+
+        const allHeaders = {
           Accept: 'application/json',
           'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          token: this.querySelector("input[name='token']").value,
-          username: this.querySelector("input[name='username']").value,
-          password: this.querySelector("input[name='password']").value,
-        }),
-        credentials: 'include',
-      })
-        .then(response => response.json())
-        .then(json => {
-          if (json) {
-            location.href = this.getAttribute('redirect-to');
-          }
+        };
+        Object.keys(this.headers).forEach(header => {
+          allHeaders[header] = this.headers[header]();
         });
-    };
-    return this.appendChild(form);
-  }
-}
 
-customElements.define('lo-reset-password-form', ResetPasswordFormComponent);
+        const body = {};
+        Object.keys(this.formFields).forEach(bodyKey => {
+          body[bodyKey] = this.querySelector(`input[name='${this.formFields[bodyKey]}']`).value;
+        });
+
+        fetch(this.formAction, {
+          method: 'POST',
+          headers: allHeaders,
+          body: JSON.stringify(body),
+          credentials: 'include',
+        })
+          .then(response => response.json())
+          .then(json => this.onSuccess(json));
+      };
+
+      return this.appendChild(form);
+    }
+  }
+);

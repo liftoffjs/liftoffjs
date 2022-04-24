@@ -28,7 +28,7 @@ export class UserGroupService extends BaseEntityService<UserGroup> {
 
   async findUserGroups(userId: number) {
     const user = await this.userService.findOne(userId);
-    return this.repository.find({ user });
+    return this.repository.find({ user }, { populate: ['group'] });
   }
 
   async addUserToGroup(userId: number, groupId: number, role: UserGroupRole) {

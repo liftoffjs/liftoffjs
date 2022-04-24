@@ -10,6 +10,7 @@ declare global {
       'lo-register-form': React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement>;
       'lo-forgot-password-form': React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement>;
       'lo-reset-password-form': React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement>;
+      'lo-create-group-form': React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement>;
     }
   }
 }
@@ -148,6 +149,7 @@ export const MasterLayout: React.FC<{ contain?: boolean }> = props => {
         <script src="/client/assets/js/RegisterForm.js"></script>
         <script src="/client/assets/js/ForgotPasswordForm.js"></script>
         <script src="/client/assets/js/ResetPasswordForm.js"></script>
+        <script src="/client/assets/js/CreateGroupForm.js"></script>
         {reactClientAssets.scriptTags.map(url => (
           <script key={url} src={'/client/' + url} type="module"></script>
         ))}
