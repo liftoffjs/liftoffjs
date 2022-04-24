@@ -17,27 +17,23 @@ export class UserGroupService extends BaseEntityService<UserGroup> {
     super(repository);
   }
 
-  async findUserGroup(userId: number, groupId: number) {
-    const [user, group] = await Promise.all([
-      this.userService.findOne(userId),
-      this.groupService.findOne(groupId),
-    ])
-
-    return this.repository.findOne({ user, group });
+  async findUserGroup(userId: number, groupId: number): Promise<UserGroup> {
+    const group = await this.groupService.findOne(groupId, ['userGroups.user', 'userGroups.group']);
+    return group.userGroups.getItems().find(ug => ug.user.id === userId);
   }
 
-  async findUserGroups(userId: number) {
+  async findUserGroups(userId: number): Promise<UserGroup[]> {
     const user = await this.userService.findOne(userId);
     return this.repository.find({ user }, { populate: ['group'] });
   }
 
   async addUserToGroup(userId: number, groupId: number, role: UserGroupRole) {
-    const [user, group] = await Promise.all([
+    const [user, group, existingRole] = await Promise.all([
       this.userService.findOne(userId),
       this.groupService.findOne(groupId),
+      this.findUserGroup(userId, groupId),
     ])
 
-    const existingRole = await this.repository.findOne({ user, group });
     if (existingRole) {
       throw new Error("User is already in the group."); // TODO: Custom error
     }
@@ -55,11 +51,14 @@ export class UserGroupService extends BaseEntityService<UserGroup> {
 
   async removeUserFromGroup(userId: number, groupId: number) {
     const userGroup = await this.findUserGroup(userId, groupId);
-    await this.repository.nativeDelete(userGroup);
+    if (userGroup) {
+      await this.repository.removeAndFlush(userGroup);
+    }
   }
 
   async deleteAll(groupId: number) {
-    const group = await this.groupService.findOne(groupId);
-    return this.repository.nativeDelete({ group });
+    const group = await this.groupService.findOne(groupId, ['userGroups.user', 'userGroups.group']);
+    group.userGroups.getItems().forEach(ug => this.repository.remove(ug));
+    return this.repository.flush();
   }
 }

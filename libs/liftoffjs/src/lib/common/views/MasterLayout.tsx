@@ -11,6 +11,8 @@ declare global {
       'lo-forgot-password-form': React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement>;
       'lo-reset-password-form': React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement>;
       'lo-create-group-form': React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement>;
+      'lo-user-group-role-form': React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement>;
+      'lo-invite-user-group-form': React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement>;
     }
   }
 }
@@ -150,6 +152,9 @@ export const MasterLayout: React.FC<{ contain?: boolean }> = props => {
         <script src="/client/assets/js/ForgotPasswordForm.js"></script>
         <script src="/client/assets/js/ResetPasswordForm.js"></script>
         <script src="/client/assets/js/CreateGroupForm.js"></script>
+        <script src="/client/assets/js/UserGroupRoleForm.js"></script>
+        <script src="/client/assets/js/InviteUserGroupForm.js"></script>
+
         {reactClientAssets.scriptTags.map(url => (
           <script key={url} src={'/client/' + url} type="module"></script>
         ))}
